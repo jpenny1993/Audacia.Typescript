@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using Audacia.Typescript.Transpiler.Extensions;
 
 namespace Audacia.Typescript.Transpiler.Builders
@@ -29,7 +30,8 @@ namespace Audacia.Typescript.Transpiler.Builders
                                                    BindingFlags.Instance | BindingFlags.DeclaredOnly)
                 .Where(p => !p.GetIndexParameters().Any())
                 .Where(p => !p.GetMethod.IsPrivate)
-                .Where(p => !p.GetMethod.IsAssembly);
+                .Where(p => !p.GetMethod.IsAssembly)
+                .Where(p => !p.GetCustomAttributes(typeof(IgnoreDataMemberAttribute)).Any());
             _attributes = sourceType.GetCustomAttributes(false).Cast<Attribute>().Where(t => t.GetType().IsPublic).ToList();
         }
 
